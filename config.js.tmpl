@@ -1,0 +1,14 @@
+var config = {};
+config.fb = {};
+
+// server
+config.port = process.env.PORT || 8080;
+config.sslKeyFile  = 'PATH_TO_SSL_KEY_FILE';
+config.sslCertFile = 'PATH_TO_SSL_CERT_FILE';
+
+// facebook 
+config.fb.webhookToken = 'FB_WEBHOOK_TOKEN';
+config.fb.pageToken = 'FB_PAGE_TOKEN';
+config.fb.msgUrl = 'https://graph.facebook.com/v2.6/me/messages';
+
+module.exports = config;
