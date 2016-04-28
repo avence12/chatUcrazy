@@ -4,7 +4,7 @@
   "description": "A chat bot for the Facebook Messenger Platform",
   "main": "server.js",
   "scripts": {
-    "test": "nyc tap test/*.js",
+    "test": "standard && nyc tap test/*.js",
     "travis-coveralls": "nyc report --reporter=text-lcov | coveralls",
     "start": "sudo nodemon --harmony server.js"
   },
@@ -17,19 +17,17 @@
   "bugs": {
     "url": "https://github.com/avence12/chatUcrazy/issues"
   },
-  "homepage": "https://www.lightblue.asia/projects/chatUcrazy",
+  "homepage": "https://github.com/avence12/chatUcrazy",
   "dependencies": {
     "body-parser": "^1.15.0",
-    "cross-spawn-async": "^2.2.2",
     "express": "^4.13.4",
     "mongoose": "^3.6.13",
     "request": "^2.72.0"
   },
   "devDependencies": {
-    "eslint-plugin-react": "^5.0.1",
-    "coveralls": "^2.11.9",
     "nock": "^8.0.0",
-    "nyc": "~6.4.0",
-    "tap": "~5.7.1"
+    "nyc": "^6.4.0",
+    "tap": "^5.7.1",
+    "standard": "^6.0.8"
   }
 }
