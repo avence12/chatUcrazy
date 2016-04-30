@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const fs = require('fs')
 // global configuration
 const config = require('./config')
+const handler = require('./handler')
 
 var httpsOptions = {
   key: fs.readFileSync(config.sslKeyFile),
@@ -72,24 +73,22 @@ var genericTmpl = {
 // [Start of API Route]=============================================================================
 var router = express.Router() // get an instance of the express Router
 router.get('/webhook/', function (req, res) {
-  if (req.query['hub.verify_token'] === config.fb.webhookToken) {
+  if (req.query['hub.mode'] === 'subscribe' && req.query['hub.verify_token'] === config.fb.webhookToken) {
     res.send(req.query['hub.challenge'])
   }
   res.send('Error, wrong validation token')
 })
 
 router.post('/webhook/', function (req, res) {
-  var messaging_events = null
-  if (undefined !== req.body.entry[0].messaging) {
-    messaging_events = req.body.entry[0].messaging
-  } else {
+  const messaging_events = getFirstMessagingEntry(req.body)
+  if (messaging_events === null) {
     res.send('entry is empty')
   }
   for (var i = 0; i < messaging_events.length; i++) {
-    var event = req.body.entry[0].messaging[i]
-    var sender = event.sender.id
+    const event = messaging_events[i]
+    const sender = event.sender.id
     if (event.message && event.message.text) {
-      var text = event.message.text
+      const text = event.message.text
       console.log('sender: ' + sender + ' text: ' + text)
       if (text === 'Generic') {
         sendGenericMessage(sender, genericTmpl)
@@ -97,11 +96,8 @@ router.post('/webhook/', function (req, res) {
       // Handle a text message from this sender
       sendTextMessage(sender, 'Text received, echo: ' + text.substring(0, 200))
     }
-    continue // important! it prevents from processing the same message repeatedly
   }
-  res.send(JSON.stringify({
-    status: 'ok'
-  }))
+  res.sendStatus(200)
 })
 
 router.get('/msbot/', function (req, res) {
@@ -113,9 +109,24 @@ app.use('/' + config.fb.appName, router)
 
 // [End of API Route]=============================================================================
 
+// See the Webhook reference
+// https://developers.facebook.com/docs/messenger-platform/webhook-reference
+function getFirstMessagingEntry (body) {
+  var val = null
+  if (body.object === 'page' &&
+    body.entry &&
+    Array.isArray(body.entry) &&
+    body.entry.length > 0 &&
+    body.entry[0] &&
+    body.entry[0].messaging) {
+    val = body.entry[0].messaging
+  }
+  return val
+}
+
 function sendTextMessage (sender, text) {
   var messageData = {
-    text: text
+    text: text // handler.getBouBou(text)
   }
   request({
     url: config.fb.msgUrl,
@@ -140,7 +151,7 @@ function sendTextMessage (sender, text) {
 
 function sendGenericMessage (sender, payload, cb) {
   request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
+    url: config.fb.msgUrl,
     qs: {
       access_token: config.fb.pageToken
     },

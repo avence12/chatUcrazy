@@ -1,14 +1,28 @@
 var config = {};
 config.fb = {};
 
-// server
+/** server **/
+// port of API server
 config.port = process.env.PORT || 8080;
+
+//SSL key file
 config.sslKeyFile  = 'PATH_TO_SSL_KEY_FILE';
+
+// SSL keychain
 config.sslCertFile = 'PATH_TO_SSL_CERT_FILE';
 
-// facebook 
+/** facebook **/
+
+// API will be set under app name. e.g. https://myhost:8080/FB_APPNAME/
+config.fb.appName = 'FB_APPNAME';
+
+// Can be found on your facebook developer dashboard. See https://developers.facebook.com/docs/messenger-platform/quickstart
 config.fb.webhookToken = 'FB_WEBHOOK_TOKEN';
+
+// Can be found on your facebook developer dashboard. See https://developers.facebook.com/docs/messenger-platform/quickstart
 config.fb.pageToken = 'FB_PAGE_TOKEN';
+
+// The facebook messenger API entry
 config.fb.msgUrl = 'https://graph.facebook.com/v2.6/me/messages';
 
 module.exports = config;

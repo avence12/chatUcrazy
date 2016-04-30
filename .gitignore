@@ -34,3 +34,6 @@ node_modules
 
 # DO NOT PUSH CONFIG TO GITHUB
 config.js
+
+# NUC coverage output
+.nyc_output

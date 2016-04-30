@@ -6,7 +6,7 @@
   "scripts": {
     "test": "standard && nyc tap test/*.js",
     "travis-coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "start": "sudo nodemon --harmony server.js"
+    "start": "sudo nodemon --delay 3 --harmony server.js"
   },
   "repository": {
     "type": "git",
@@ -20,9 +20,12 @@
   "homepage": "https://github.com/avence12/chatUcrazy",
   "dependencies": {
     "body-parser": "^1.15.0",
+    "botbuilder": "~0.9.2",
     "express": "^4.13.4",
     "mongoose": "^3.6.13",
-    "request": "^2.72.0"
+    "node-wit": "^3.2.2",
+    "request": "^2.72.0",
+    "restify": "~4.0.4"
   },
   "devDependencies": {
     "nock": "^8.0.0",
