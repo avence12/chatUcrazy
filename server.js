@@ -6,7 +6,7 @@ const bodyParser = require('body-parser')
 const fs = require('fs')
 // global configuration
 const config = require('./config')
-const handler = require('./handler')
+const msgHandler = require('./handler')
 
 var httpsOptions = {
   key: fs.readFileSync(config.sslKeyFile),
@@ -17,7 +17,7 @@ var app = express()
 
 // Process application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({
-  extended: false
+  extended: true
 }))
 
 // Process application/json
@@ -89,12 +89,16 @@ router.post('/webhook/', function (req, res) {
     const sender = event.sender.id
     if (event.message && event.message.text) {
       const text = event.message.text
-      console.log('sender: ' + sender + ' text: ' + text)
+      console.log('sender: ' + sender + ' text: ' + text)      
       if (text === 'Generic') {
-        sendGenericMessage(sender, genericTmpl)
+        sendMessage(sender, genericTmpl)
       }
-      // Handle a text message from this sender
-      sendTextMessage(sender, 'Text received, echo: ' + text.substring(0, 200))
+      // Handle a text message from this sender            
+      var textMsg = {
+        text: text.substring(0, 200)
+        //text: msgHandler.getBouBou(text)
+      }
+      sendMessage(sender, textMsg)
     }
   }
   res.sendStatus(200)
@@ -124,32 +128,7 @@ function getFirstMessagingEntry (body) {
   return val
 }
 
-function sendTextMessage (sender, text) {
-  var messageData = {
-    text: text // handler.getBouBou(text)
-  }
-  request({
-    url: config.fb.msgUrl,
-    qs: {
-      access_token: config.fb.pageToken
-    },
-    method: 'POST',
-    json: {
-      recipient: {
-        id: sender
-      },
-      message: messageData
-    }
-  }, function (error, response, body) {
-    if (error) {
-      console.log('Error sending message: ', error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-    }
-  })
-}
-
-function sendGenericMessage (sender, payload, cb) {
+function sendMessage (sender, payload, cb) {  
   request({
     url: config.fb.msgUrl,
     qs: {
@@ -162,14 +141,14 @@ function sendGenericMessage (sender, payload, cb) {
       },
       message: payload
     }
-  }, function (error, response, body) {
+  }, function (error, res, body) {
     if (error) {
       console.log('Error sending messages: ', error)
       return cb(error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-      return cb(response.body.error)
     }
-    cb(null, body)
+    if (res.body.error) {
+      console.log('Error: ', res.body.error)
+      return cb(res.body.error)
+    }
   })
 }
