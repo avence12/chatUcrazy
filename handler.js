@@ -24,6 +24,7 @@ Handler.getProfile = function (id, cb) {
 }
 
 Handler.getStock = function (sender, stockIds, cb) {
+  if (!cb) cb = Function.prototype
   request({
     method: 'GET',
     uri: config.stock.googleFinanceApi,

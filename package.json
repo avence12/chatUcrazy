@@ -6,7 +6,8 @@
   "scripts": {
     "test": "standard && nyc tap test/*.js",
     "travis-coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "start": "sudo nodemon --delay 3 --harmony server.js"
+    "start": "sudo nodemon --delay 3 --harmony server.js",
+    "msbot": "sudo nodemon --delay 3 --harmony msbot.js"
   },
   "repository": {
     "type": "git",

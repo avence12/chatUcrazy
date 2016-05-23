@@ -58,7 +58,7 @@ router.post('/webhook/', function (req, res) {
     if (event.message && event.message.text) {
       const text = event.message.text
       console.log('sender: ' + sender + ' text: ' + text)
-      if (text.substring(0, 5) === 'stock') {
+      if (text.substring(0, 5).toLowerCase() === 'stock') {
        // sendMessage(sender, msgHandler.getStock(text.substring(6)))
         msgHandler.getStock(sender, text.substring(6), sendMessage)
       } else {
@@ -67,10 +67,6 @@ router.post('/webhook/', function (req, res) {
     }
   }
   res.sendStatus(200)
-})
-
-router.get('/msbot/', function (req, res) {
-  res.send('Microsoft BOT!!!')
 })
 
 // all of our routes will be prefixed with appName
@@ -94,6 +90,7 @@ function getFirstMessagingEntry (body) {
 }
 
 function sendMessage (sender, payload, cb) {
+  if (!cb) cb = Function.prototype
   request({
     url: config.fb.msgUrl,
     qs: {
