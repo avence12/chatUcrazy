@@ -4,7 +4,7 @@ const restify = require('restify')
 const builder = require('botbuilder')
 
 // microsoft Cortana models
-//var model = config.msbot.luisModelUrl;
+// var model = config.msbot.luisModelUrl;
 var model = config.msbot.luisAssistV2
 
 var dialog = new builder.LuisDialog(model)
@@ -22,7 +22,6 @@ bot.add('/', dialog)
 dialog.on('builtin.intent.alarm.set_alarm', builder.DialogAction.send('Creating Alarm'))
 dialog.on('builtin.intent.alarm.delete_alarm', builder.DialogAction.send('Deleting Alarm'))
 dialog.onDefault(builder.DialogAction.send('I\'m sorry I didn\'t understand. I can only create & delete alarms.'))
-
 
 // Setup Restify Server
 var server = restify.createServer()

@@ -1,4 +1,4 @@
-use 'strict'
+'use strict'
 const config = require('./config')
 const restify = require('restify')
 const builder = require('botbuilder')

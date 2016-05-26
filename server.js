@@ -48,12 +48,12 @@ router.get('/webhook/', function (req, res) {
 })
 
 router.post('/webhook/', function (req, res) {
-  const messaging_events = getFirstMessagingEntry(req.body)
-  if (messaging_events === null) {
+  const messagingEvents = getFirstMessagingEntry(req.body)
+  if (messagingEvents === null) {
     res.send('entry is empty')
   }
-  for (var i = 0; i < messaging_events.length; i++) {
-    const event = messaging_events[i]
+  for (var i = 0; i < messagingEvents.length; i++) {
+    const event = messagingEvents[i]
     const sender = event.sender.id
     if (event.message && event.message.text) {
       const text = event.message.text
