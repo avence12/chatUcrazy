@@ -34,3 +34,6 @@ node_modules
 
 # NUC coverage output
 .nyc_output
+
+# misc
+sftp-config.json
